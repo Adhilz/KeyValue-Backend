@@ -21,7 +21,4 @@ async def create_department(
     db: AsyncSession = Depends(get_db),
     _current_user: TokenPayload = Depends(get_current_user),
 ):
-    return await services.create(
-        db,
-        body
-    )
+    return await services.create(db, body)

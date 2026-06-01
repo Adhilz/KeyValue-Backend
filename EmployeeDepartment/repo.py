@@ -1,19 +1,12 @@
-
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from models.employee_department import EmployeeDepartment
 from sqlalchemy.ext.asyncio import AsyncSession
-async def attach(
-        db:AsyncSession,
-        emp_id:int,
-        dept_id:int
-)-> EmployeeDepartment :
-    stmt = EmployeeDepartment (
-        emp_id=emp_id,
-        dept_id=dept_id
-        
-        )
+
+
+async def attach(db: AsyncSession, emp_id: int, dept_id: int) -> EmployeeDepartment:
+    stmt = EmployeeDepartment(emp_id=emp_id, dept_id=dept_id)
     db.add(stmt)
     try:
         await db.commit()
@@ -22,6 +15,7 @@ async def attach(
         raise
     await db.refresh(stmt)
     return stmt
+
 
 async def detach(
     db: AsyncSession,
@@ -43,9 +37,8 @@ async def detach(
 
     return result
 
+
 # async def get_by_id(
 #         db:AsyncSession,
 #         body
 # )->Employee
-    
-    

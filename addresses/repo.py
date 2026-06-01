@@ -85,4 +85,3 @@ async def delete(db: AsyncSession, address_id: int):
     await db.delete(address)
     await db.commit()
     return True
-

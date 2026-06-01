@@ -13,19 +13,20 @@
 # APP_ENV: str = os.getenv("APP_ENV", "development")
 
 
-""""pydantic"""
+""" "pydantic"""
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class Settings(BaseSettings):
-    database_url:str
-    app_env:str="Development"
-    jwt_algorithm:str
-    jwt_expiry_minutes:int
-    jwt_Secret:str
-    debug: bool=False
 
-    model_config=SettingsConfigDict(
-        env_file=".env"
-    )
-setting=Settings()
+class Settings(BaseSettings):
+    database_url: str
+    app_env: str = "Development"
+    jwt_algorithm: str
+    jwt_expiry_minutes: int
+    jwt_Secret: str
+    debug: bool = False
+
+    model_config = SettingsConfigDict(env_file=".env")
+
+
+setting = Settings()

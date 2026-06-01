@@ -2,15 +2,14 @@ from pydantic import BaseModel
 
 
 class DepartmentCreate(BaseModel):
-    name:str
+    name: str
+
 
 class DepartmentUpdate(BaseModel):
-    name:str
+    name: str
 
 
 class DepartmentResponse(BaseModel):
-    id:int
-    name:str
-    model_config={
-        "from_attributes":True
-        }
+    id: int
+    name: str
+    model_config = {"from_attributes": True}

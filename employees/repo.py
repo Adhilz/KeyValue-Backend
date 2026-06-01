@@ -1,4 +1,3 @@
-
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,10 +8,13 @@ from models.employee import Employee
 
 
 def _employee_stmt(employee_id: int):
-    return select(Employee).options(
-        selectinload(Employee.addresses)).where(
-        Employee.id == employee_id,
-        Employee.deleted_at.is_(None),
+    return (
+        select(Employee)
+        .options(selectinload(Employee.addresses))
+        .where(
+            Employee.id == employee_id,
+            Employee.deleted_at.is_(None),
+        )
     )
 
 
@@ -21,7 +23,6 @@ async def create(
     name: str,
     email: str,
     password: str,
-    
     age: int | None = None,
 ) -> Employee:
     db_employee = Employee(
@@ -39,32 +40,31 @@ async def create(
     await db.refresh(db_employee)
     return db_employee
 
+
 async def get_all_employees(db: AsyncSession):
-    stmt = select(Employee).options(selectinload(Employee.addresses)).where(Employee.deleted_at.is_(None))
+    stmt = (
+        select(Employee)
+        .options(selectinload(Employee.addresses))
+        .where(Employee.deleted_at.is_(None))
+    )
     result = await db.scalars(stmt)
     return result.all()
 
-async def get_by_id(
-    db: AsyncSession,
-    employee_id: int
-):
+
+async def get_by_id(db: AsyncSession, employee_id: int):
     stmt = _employee_stmt(employee_id)
     result = await db.scalar(stmt)
     return result
 
-async def delete_by_id(
-        db:AsyncSession,
-        employee_id: int
-):
+
+async def delete_by_id(db: AsyncSession, employee_id: int):
     result = await db.scalar(_employee_stmt(employee_id))
     if result is None:
         return None
     await db.delete(result)
     await db.commit()
-    return {
-        "message": f"Employee with id {employee_id} deleted successfully"
-    }
-    
+    return {"message": f"Employee with id {employee_id} deleted successfully"}
+
 
 async def update_full(
     db: AsyncSession,
@@ -113,14 +113,16 @@ async def update_partial(db: AsyncSession, employee_id: int, data: dict) -> Empl
 
     await db.refresh(result)
     return result
-    
-async def get_by_email(db:AsyncSession,email:str):
-    stmt=select(Employee).where(
-        Employee.email== email,
+
+
+async def get_by_email(db: AsyncSession, email: str):
+    stmt = select(Employee).where(
+        Employee.email == email,
         Employee.deleted_at.is_(None),
     )
     result = await db.scalars(stmt)
     return result.first()
+
 
 async def delete_address(
     db: AsyncSession,

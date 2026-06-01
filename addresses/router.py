@@ -23,8 +23,10 @@ async def create_address(
 
 
 @router.get("", response_model=list[AddressResponse])
-async def get_all_addresses(db: AsyncSession = Depends(get_db),
-                            _current_user: TokenPayload = Depends(get_current_user),):
+async def get_all_addresses(
+    db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
+):
     return await address_service.get_all(db)
 
 

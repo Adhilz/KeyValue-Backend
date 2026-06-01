@@ -25,6 +25,7 @@ def _validate_postal_code_for_country(country: str, postal_code: str) -> None:
     if normalized_country in ("IN", "INDIA") and postal_code_length != 6:
         raise BadRequestException("Indian PIN codes must be exactly 6 digits")
 
+
 async def create(
     db: AsyncSession,
     employee_id: int,

@@ -1,16 +1,18 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class TokenResponse(BaseModel):
-    access_token:str
-    token_type:str="bearer"
+    access_token: str
+    token_type: str = "bearer"
+
 
 class LoginRequest(BaseModel):
-    email:str
-    password:str
+    email: str
+    password: str
+
 
 class TokenPayload(BaseModel):
-    name:str
-    email:str
-    password:str
-    role:str
+    name: str
+    email: str
+    password: str
+    role: str

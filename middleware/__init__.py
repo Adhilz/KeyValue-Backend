@@ -10,7 +10,7 @@ def configure_middleware(app: FastAPI) -> None:
 
     Stack (request): CORS -> request logging -> process time -> routes.
     """
-    
+
     app.add_middleware(RequestLoggingMiddleware)
     app.add_middleware(
         CORSMiddleware,

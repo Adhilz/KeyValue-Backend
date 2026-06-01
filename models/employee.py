@@ -1,12 +1,11 @@
 from datetime import datetime
 import enum
-from typing import Any, Optional
+from typing import Optional
 
 from sqlalchemy import DateTime, Enum, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.address import Address
-from models.department import Department
 from models.entity import Entity
 
 
@@ -16,11 +15,13 @@ def _datetime_to_iso(value: datetime | None) -> str | None:
 
     return value.isoformat()
 
-class EmployeeRole(str,enum.Enum):
-    UI="UI"
-    UX="UX"
-    DEVELOPER="Developer"
-    HR="HR" 
+
+class EmployeeRole(str, enum.Enum):
+    UI = "UI"
+    UX = "UX"
+    DEVELOPER = "Developer"
+    HR = "HR"
+
 
 class Employee(Entity):
     __abstract__ = False
@@ -43,8 +44,12 @@ class Employee(Entity):
         nullable=False,
         unique=True,
     )
-    role: Mapped[EmployeeRole]=mapped_column(
-        Enum(EmployeeRole, name="employeerole",values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+    role: Mapped[EmployeeRole] = mapped_column(
+        Enum(
+            EmployeeRole,
+            name="employeerole",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
         nullable=False,
         server_default=EmployeeRole.DEVELOPER.value,
     )
@@ -53,17 +58,13 @@ class Employee(Entity):
         nullable=True,
     )
 
-
-    password_hash:Mapped[str]=mapped_column(
-        String(255),
-        nullable=False
-    )
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
     addresses: Mapped[list["Address"]] = relationship(
-    "Address",
-    back_populates="employee",   # ✅ singular
-)
-    
+        "Address",
+        back_populates="employee",  # ✅ singular
+    )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -81,18 +82,13 @@ class Employee(Entity):
         DateTime(timezone=True),
         nullable=True,
     )
-    employee_department = relationship(
-    "EmployeeDepartment",
-    back_populates="employee"
-)
+    employee_department = relationship("EmployeeDepartment", back_populates="employee")
     # def to_api_dict(self) -> dict[str, Any]:
     #     return {
     #         "id": self.id,
     #         "name": self.name,
     #         "email": self.email,
     #         "age": self.age,
-
-            
 
     #         "created_at": _datetime_to_iso(self.created_at),
     #         "updated_at": _datetime_to_iso(self.updated_at),

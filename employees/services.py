@@ -9,12 +9,12 @@ from employees.repo import (
     get_by_id as get_employee_repo,
     update_full as update_full_repo,
     update_partial as update_partial_repo,
-    delete_address 
+    delete_address,
 )
-from addresses.schemas import AddressCreate
 from employees.schemas import EmployeeCreate, EmployeeFullUpdate, EmployeeUpdate
 from exceptions import BadRequestException, ConflictException, NotFoundException
 from addresses import repo as address_repo
+
 
 def _require_non_empty_string(value: str | None, field_name: str) -> str:
     if not isinstance(value, str) or not value.strip():
@@ -47,9 +47,7 @@ async def create(db: AsyncSession, body: EmployeeCreate):
         return await get_employee_repo(db, employee.id)
 
     except IntegrityError as exc:
-        raise ConflictException(
-            f"Email '{email}' is already in use"
-        ) from exc
+        raise ConflictException(f"Email '{email}' is already in use") from exc
 
 
 async def get_all(db: AsyncSession):
@@ -119,6 +117,7 @@ async def update_partial(
 
     return employee
 
+
 async def delete_employee_address(
     db: AsyncSession,
     employee_id: int,
@@ -132,10 +131,7 @@ async def delete_employee_address(
 
     if not deleted:
         raise NotFoundException(
-            
             "Address not found for employee",
         )
 
-    return {
-        "message": "Address deleted successfully"
-    }
+    return {"message": "Address deleted successfully"}

@@ -38,9 +38,9 @@ class Address(Entity):
     country: Mapped[str] = mapped_column(String(100), nullable=False)
 
     employee: Mapped["Employee"] = relationship(
-    "Employee",
-    back_populates="addresses",  # ✅ plural
-)
+        "Employee",
+        back_populates="addresses",  # ✅ plural
+    )
 
     def to_api_dict(self) -> dict:
         return {

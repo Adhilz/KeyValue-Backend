@@ -7,7 +7,6 @@ from database.connection import get_db
 from departments.schemas import DepartmentCreate, DepartmentResponse, DepartmentUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 from departments import services
-from auth.schemas import TokenPayload
 
 router = APIRouter(
     prefix="/department",
@@ -21,13 +20,10 @@ async def create_department(
     db: AsyncSession = Depends(get_db),
     _current_user: TokenPayload = Depends(get_current_user),
 ):
-    return await services.create_department(
-        db,
-        body
-    )
+    return await services.create_department(db, body)
 
 
-@router.get("",response_model=list[DepartmentResponse])
+@router.get("", response_model=list[DepartmentResponse])
 async def get_all_departments(
     db: AsyncSession = Depends(get_db),
     _current_user: TokenPayload = Depends(get_current_user),
@@ -35,7 +31,7 @@ async def get_all_departments(
     return await services.get_all(db)
 
 
-@router.get("/{department_id}",response_model=DepartmentResponse)
+@router.get("/{department_id}", response_model=DepartmentResponse)
 async def get_department(
     department_id: int,
     db: AsyncSession = Depends(get_db),
