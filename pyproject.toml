@@ -16,6 +16,7 @@ dependencies = [
     "python-jose[cryptography]>=3.5.0",
     "greenlet>=3.5.1",
     "python-multipart>=0.0.30",
+    "psycopg2-binary>=2.9.12",
 ]
 
 [dependency-groups]
