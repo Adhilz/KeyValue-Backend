@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     app_env: str = "Development"
     jwt_algorithm: str
     jwt_expiry_minutes: int
+    jwt_refresh_expiry_minutes: float
     jwt_Secret: str
     debug: bool = False
 
