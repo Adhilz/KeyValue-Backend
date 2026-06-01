@@ -3,6 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from addresses import services as address_service
 from addresses.schemas import AddressCreateRequest, AddressResponse, AddressUpdate
+from auth.dependencies import get_current_user
+from auth.schemas import TokenPayload
 from database import get_db
 
 router = APIRouter(
@@ -15,12 +17,14 @@ router = APIRouter(
 async def create_address(
     body: AddressCreateRequest,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await address_service.create_for_employee_request(db, body)
 
 
 @router.get("", response_model=list[AddressResponse])
-async def get_all_addresses(db: AsyncSession = Depends(get_db)):
+async def get_all_addresses(db: AsyncSession = Depends(get_db),
+                            _current_user: TokenPayload = Depends(get_current_user),):
     return await address_service.get_all(db)
 
 
@@ -28,6 +32,7 @@ async def get_all_addresses(db: AsyncSession = Depends(get_db)):
 async def get_address(
     address_id: int,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await address_service.get_by_id(db, address_id)
 
@@ -37,6 +42,7 @@ async def update_address(
     address_id: int,
     body: AddressUpdate,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await address_service.update(db, address_id, body)
 
@@ -46,6 +52,7 @@ async def patch_address(
     address_id: int,
     body: AddressUpdate,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await address_service.update(db, address_id, body)
 
@@ -54,5 +61,6 @@ async def patch_address(
 async def delete_address(
     address_id: int,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await address_service.delete_by_id(db, address_id)

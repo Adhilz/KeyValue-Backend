@@ -1,12 +1,13 @@
 from fastapi import status
 from fastapi import APIRouter, Depends
 
+from auth.dependencies import get_current_user
 from auth.schemas import TokenPayload
 from database.connection import get_db
 from departments.schemas import DepartmentCreate, DepartmentResponse, DepartmentUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 from departments import services
-
+from auth.schemas import TokenPayload
 
 router = APIRouter(
     prefix="/department",
@@ -18,6 +19,7 @@ router = APIRouter(
 async def create_department(
     body: DepartmentCreate,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await services.create_department(
         db,
@@ -28,6 +30,7 @@ async def create_department(
 @router.get("",response_model=list[DepartmentResponse])
 async def get_all_departments(
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await services.get_all(db)
 
@@ -36,6 +39,7 @@ async def get_all_departments(
 async def get_department(
     department_id: int,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await services.get_department_by_id(
         department_id,
@@ -48,6 +52,7 @@ async def update_department(
     department_id: int,
     body: DepartmentUpdate,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await services.update_full_departments(
         db,
@@ -61,6 +66,7 @@ async def patch_department(
     department_id: int,
     body: DepartmentUpdate,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await services.update_partial_departments(
         db,
@@ -73,6 +79,7 @@ async def patch_department(
 async def delete_department(
     department_id: int,
     db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await services.delete_department_by_id(
         department_id,

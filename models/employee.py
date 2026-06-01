@@ -1,7 +1,8 @@
 from datetime import datetime
+import enum
 from typing import Any, Optional
 
-from sqlalchemy import DateTime, Integer, String, func
+from sqlalchemy import DateTime, Enum, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.address import Address
@@ -15,6 +16,11 @@ def _datetime_to_iso(value: datetime | None) -> str | None:
 
     return value.isoformat()
 
+class EmployeeRole(str,enum.Enum):
+    UI="UI"
+    UX="UX"
+    DEVELOPER="Developer"
+    HR="HR" 
 
 class Employee(Entity):
     __abstract__ = False
@@ -37,7 +43,11 @@ class Employee(Entity):
         nullable=False,
         unique=True,
     )
-
+    role: Mapped[EmployeeRole]=mapped_column(
+        Enum(EmployeeRole, name="employeerole",values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        nullable=False,
+        server_default=EmployeeRole.DEVELOPER.value,
+    )
     age: Mapped[int | None] = mapped_column(
         Integer,
         nullable=True,
