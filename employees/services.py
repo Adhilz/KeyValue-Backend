@@ -54,7 +54,7 @@ async def get_all(db: AsyncSession):
     return await get_all_employees(db)
 
 
-async def get_by_id(employee_id: int, db: AsyncSession):
+async def get_by_id(db: AsyncSession, employee_id: int):
     employee = await get_employee_repo(db, employee_id)
     if employee is None:
         raise NotFoundException("Employee not found")
