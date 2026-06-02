@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
+from exceptions import ConflictException
 from models.employee_department import EmployeeDepartment
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,7 +13,10 @@ async def attach(db: AsyncSession, emp_id: int, dept_id: int) -> EmployeeDepartm
         await db.commit()
     except IntegrityError:
         await db.rollback()
-        raise
+        raise ConflictException(
+            detail=f"employee with id {emp_id} already exist in the department"
+        )
+
     await db.refresh(stmt)
     return stmt
 

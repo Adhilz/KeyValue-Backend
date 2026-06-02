@@ -15,7 +15,7 @@ def _require_non_empty_string(value: str | None, field_name: str) -> str:
 async def create(db: AsyncSession, body: EmployeeDepartmentCreate):
 
     employee = await employee_repo.get_by_id(db, body.emp_id)
-    department = await department_repo.get_department_by_id(db, body.dept_id)
+    department = await department_repo.get_department_id(db, body.dept_id)
     if employee is None:
         raise NotFoundException("Employee not found ")
     if department is None:

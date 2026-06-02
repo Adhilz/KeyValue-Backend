@@ -50,8 +50,8 @@ async def get_employee(
     _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await employee_service.get_by_id(
-        employee_id,
         db,
+        employee_id,
     )
 
 
@@ -90,8 +90,8 @@ async def delete_employee(
     _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await employee_service.delete_by_id(
-        employee_id,
         db,
+        employee_id,
     )
 
 

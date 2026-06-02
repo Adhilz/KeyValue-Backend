@@ -5,9 +5,11 @@ from addresses.repo import (
     delete as delete_address_repo,
     get_all as get_all_addresses_repo,
     get_by_id as get_address_repo,
+    get_by_employee_id as get_addresses_by_employee_repo,
+    get_by_employee_and_id as get_address_by_employee_repo,
     update as update_address_repo,
 )
-from addresses.schemas import AddressCreate, AddressCreateRequest, AddressUpdate
+from addresses.schemas import AddressCreate, AddressUpdate
 from employees.repo import get_by_id as get_employee_repo
 from exceptions import BadRequestException, NotFoundException
 
@@ -41,13 +43,6 @@ async def create(
         employee_id,
         address,
     )
-
-
-async def create_for_employee_request(
-    db: AsyncSession,
-    body: AddressCreateRequest,
-):
-    return await create(db, body.employee_id, body)
 
 
 async def get_all(db: AsyncSession):
@@ -98,3 +93,26 @@ async def delete_by_id(db: AsyncSession, address_id: int):
         raise NotFoundException("Address not found")
 
     return {"message": "Address deleted successfully"}
+
+
+async def get_by_employee_id(db: AsyncSession, employee_id: int):
+    employee = await get_employee_repo(db, employee_id)
+
+    if employee is None:
+        raise NotFoundException("Employee not found")
+
+    return await get_addresses_by_employee_repo(db, employee_id)
+
+
+async def get_by_id_for_employee(db: AsyncSession, employee_id: int, address_id: int):
+    employee = await get_employee_repo(db, employee_id)
+
+    if employee is None:
+        raise NotFoundException("Employee not found")
+
+    address = await get_address_by_employee_repo(db, employee_id, address_id)
+
+    if address is None:
+        raise NotFoundException("Address not found")
+
+    return address

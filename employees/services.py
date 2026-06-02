@@ -57,11 +57,11 @@ async def get_all(db: AsyncSession):
 async def get_by_id(db: AsyncSession, employee_id: int):
     employee = await get_employee_repo(db, employee_id)
     if employee is None:
-        raise NotFoundException("Employee not found")
+        raise NotFoundException(f"Employee not found {employee_id}")
     return employee
 
 
-async def delete_by_id(employee_id: int, db: AsyncSession):
+async def delete_by_id(db: AsyncSession, employee_id: int):
     deleted_employee = await delete_employee_repo(db, employee_id)
     if deleted_employee is None:
         raise NotFoundException("Employee not found")

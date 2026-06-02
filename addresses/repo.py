@@ -42,6 +42,22 @@ async def get_by_id(db: AsyncSession, address_id: int):
     return await db.scalar(stmt)
 
 
+async def get_by_employee_id(db: AsyncSession, employee_id: int):
+    stmt = (
+        select(Address).where(Address.employee_id == employee_id).order_by(Address.id)
+    )
+    result = await db.scalars(stmt)
+    return result.all()
+
+
+async def get_by_employee_and_id(db: AsyncSession, employee_id: int, address_id: int):
+    stmt = select(Address).where(
+        Address.employee_id == employee_id,
+        Address.id == address_id,
+    )
+    return await db.scalar(stmt)
+
+
 async def update(
     db: AsyncSession,
     address_id: int,

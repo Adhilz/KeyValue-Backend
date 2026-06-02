@@ -22,6 +22,7 @@ async def test_get_by_id_returns_seeded_employee(db_session):
     # Seed a row directly via the ORM. We construct Employee ourselves
     # (with a real `password_hash`) because service.create currently
     # drops the password field — bypassing it keeps this test focused.
+
     seeded = Employee(
         name="Ada", email="ada@example.com", password_hash=hash_password("secret123")
     )

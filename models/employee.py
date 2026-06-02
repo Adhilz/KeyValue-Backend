@@ -5,6 +5,7 @@ from typing import Optional
 from sqlalchemy import DateTime, Enum, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from models.employee_department import EmployeeDepartment
 from models.address import Address
 from models.entity import Entity
 
@@ -62,9 +63,14 @@ class Employee(Entity):
 
     addresses: Mapped[list["Address"]] = relationship(
         "Address",
-        back_populates="employee",  # ✅ singular
+        back_populates="employee",
+        cascade="all, delete-orphan",
     )
-
+    departments: Mapped[list["Department"]] = relationship(  # noqa:F821
+        "Department",
+        secondary=EmployeeDepartment.__table__,
+        back_populates="employees",
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -82,8 +88,12 @@ class Employee(Entity):
         DateTime(timezone=True),
         nullable=True,
     )
-    employee_department = relationship("EmployeeDepartment", back_populates="employee")
-    # def to_api_dict(self) -> dict[str, Any]:
+    # employee_department = relationship(
+    # "EmployeeDepartment",
+    # back_populates="e",
+    # cascade="all, delete-orphan",
+    # )
+    # # def to_api_dict(self) -> dict[str, Any]:
     #     return {
     #         "id": self.id,
     #         "name": self.name,

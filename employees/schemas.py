@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from pydantic import EmailStr
 
 from addresses.schemas import AddressCreate, AddressResponse
+from departments.schemas import DepartmentCreate, DepartmentResponse
 
 
 class EmployeeCreate(BaseModel):
@@ -13,6 +14,7 @@ class EmployeeCreate(BaseModel):
     age: int | None = Field(ge=0, le=150, default=None)
     password: str = Field(min_length=6)
     address: AddressCreate | None = None
+    department: DepartmentCreate | None = None
 
 
 class EmployeeResponse(BaseModel):
@@ -23,6 +25,7 @@ class EmployeeResponse(BaseModel):
     email: EmailStr
     age: int | None
     addresses: list[AddressResponse] = []
+    departments: list[DepartmentResponse] = []
 
 
 class EmployeeUpdate(BaseModel):

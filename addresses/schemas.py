@@ -39,10 +39,6 @@ class AddressCreate(BaseModel):
         return self
 
 
-class AddressCreateRequest(AddressCreate):
-    employee_id: int
-
-
 class AddressUpdate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="ignore")
 

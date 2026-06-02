@@ -10,7 +10,7 @@ from models.employee import Employee
 def _employee_stmt(employee_id: int):
     return (
         select(Employee)
-        .options(selectinload(Employee.addresses))
+        .options(selectinload(Employee.addresses), selectinload(Employee.departments))
         .where(
             Employee.id == employee_id,
             Employee.deleted_at.is_(None),
@@ -44,7 +44,7 @@ async def create(
 async def get_all_employees(db: AsyncSession):
     stmt = (
         select(Employee)
-        .options(selectinload(Employee.addresses))
+        .options(selectinload(Employee.addresses), selectinload(Employee.departments))
         .where(Employee.deleted_at.is_(None))
     )
     result = await db.scalars(stmt)
