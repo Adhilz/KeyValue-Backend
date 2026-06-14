@@ -23,6 +23,8 @@ async def create(
     name: str,
     email: str,
     password: str,
+    role: str,
+    status: str,
     age: int | None = None,
 ) -> Employee:
     db_employee = Employee(
@@ -30,6 +32,8 @@ async def create(
         email=email,
         age=age,
         password_hash=password,
+        role=role,
+        status=status,
     )
     db.add(db_employee)
     try:
@@ -66,20 +70,16 @@ async def delete_by_id(db: AsyncSession, employee_id: int):
     return {"message": f"Employee with id {employee_id} deleted successfully"}
 
 
-async def update_full(
-    db: AsyncSession,
-    employee_id: int,
-    name: str,
-    email: str,
-    age: int | None = None,
-) -> Employee:
+async def update_full(db: AsyncSession, employee_id: int, body: dict) -> Employee:
     result = await db.scalar(_employee_stmt(employee_id))
     if result is None:
         return None
 
-    result.name = name
-    result.email = email
-    result.age = age
+    result.name = body["name"]
+    result.email = body["email"]
+    result.age = body["age"]
+    result.status = body["status"]
+    result.role = body["role"]
 
     try:
         await db.commit()

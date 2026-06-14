@@ -35,13 +35,15 @@ async def create(db: AsyncSession, body: EmployeeCreate):
             email,
             password=hashed_password,
             age=body.age,
+            role=body.role,
+            status=body.status,
         )
 
-        if body.address:
+        if body.addresses:
             await address_repo.create(
                 db=db,
                 employee_id=employee.id,
-                address=body.address,
+                address=body.addresses,
             )
 
         return await get_employee_repo(db, employee.id)
@@ -73,16 +75,12 @@ async def update_full(
     employee_id: int,
     body: EmployeeFullUpdate,
 ):
-    name = _require_non_empty_string(body.name, "name")
+
     email = _require_non_empty_string(str(body.email), "email")
 
     try:
         employee = await update_full_repo(
-            db,
-            employee_id,
-            name,
-            email,
-            body.age,
+            db, employee_id, body.model_dump(exclude_none=True)
         )
     except IntegrityError as exc:
         raise ConflictException(f"Email '{email}' is already in use") from exc

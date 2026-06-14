@@ -98,7 +98,7 @@ async def delete_employee(
 @router.get("", response_model=list[EmployeeResponse])
 async def get_all_employees(
     db: AsyncSession = Depends(get_db),
-    _current_user: TokenPayload = Depends(get_current_user),
+    # _current_user: TokenPayload = Depends(get_current_user),
 ):
     return await employee_service.get_all(db)
 
